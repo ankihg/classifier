@@ -9,15 +9,20 @@ const END = '<end>';
 //     B: ['happy cat butt dump. help me.', ],
 // };
 const documentsByClass = {
-    djt: require('./datasets/djt'),
-    kanye: require('./datasets/kanye'),
+    djt: require('./datasets/tweets/djt'),
+    kanye: require('./datasets/tweets/kanye'),
 };
 const classes = Object.keys(documentsByClass);
 
 let statsByClass, wordCounts;
 ({statsByClass, wordCounts} = train(documentsByClass));
-classify('i am the president of the united states. I have a love for every American child who deserves a chance to have all of their dreams come true', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
-classify('i am man your ass is grown. To the hustlers, killers, murderers, drug dealers even the strippers, sup', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+console.log(statsByClass.logprior);
+console.log(statsByClass.loglikelihood);
+// classify('i am the president of the united states. I have a love for every American child who deserves a chance to have all of their dreams come true', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('I\'m the reason I smile everyday', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('Hillary is a crook', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('I love myself', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('Our Military is stronger', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 // classify('plz butterflies', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 
 function classify(input, logprior, loglikelihood, classes, wordCounts) {
