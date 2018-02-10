@@ -15,17 +15,19 @@ const documentsByClass = {
 };
 const classes = Object.keys(documentsByClass);
 
-let statsByClass, wordCounts;
 let trainingResults = null;
 try {
-    trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
+    // trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
     console.log('loaded training results from file');
-} catch(e) {
+} catch(e) {}
+
+if (!trainingResults) {
     console.log('training ...');
     trainingResults = train(documentsByClass);
     fs.writeFile('./trainings/results.json', JSON.stringify(trainingResults), 'utf8', (err) => console.log(err || 'successsfully wrote training results'));
 }
 
+let statsByClass, wordCounts;
 ({statsByClass, wordCounts} = trainingResults);
 
 classify('I\'m the reason I smile everyday', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
