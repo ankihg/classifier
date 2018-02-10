@@ -1,7 +1,7 @@
 const natural = require('natural');
 const fs = require('fs');
 
-const N = 2;
+const N = 1;
 const START = '<start>';
 const END = '<end>';
 
@@ -18,8 +18,8 @@ console.log(documentsByClass.kanye.length);
 
 let trainingResults = null;
 try {
-    trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
-    console.log('loaded training results from file');
+    // trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
+    // console.log('loaded training results from file');
 } catch(e) {}
 
 if (!trainingResults) {
@@ -61,12 +61,16 @@ function train(documentsByClass) {
     const numDocs = Object.keys(documentsByClass).reduce((acc, aClass) => acc + documentsByClass[aClass].length, 0);
     let unitedDoc = Object.keys(documentsByClass).reduce((acc, aClass) => {
         return acc + documentsByClass[aClass].reduce((acc, doc) => acc + doc, '') + ' ';
-    }, '');
+    }, '').toLowerCase();
     const vocabulary = natural.NGrams.ngrams(unitedDoc, N);
     const wordCounts = vocabulary.reduce((acc, word) => {
         acc[word] = (acc[word] || 0) + 1;
         return acc;
     }, {});
+
+    console.log(Object.keys(wordCounts).length);
+    _trimMostOccurringWords(15, wordCounts)
+    console.log(Object.keys(wordCounts).length);
 
     // let ngrams = natural.NGrams.ngrams(input, N, START, END);
     // console.log(ngrams);
@@ -96,4 +100,14 @@ function train(documentsByClass) {
     });
 
     return {statsByClass, wordCounts}
+}
+
+function _trimMostOccurringWords(n, wordCounts) {
+    let wordsByFrequency = Object.keys(wordCounts).sort((a, b) => {
+        return wordCounts[a] < wordCounts[b] ? 1 : wordCounts[a] > wordCounts[b] ? -1 : 0;
+    });
+
+    wordsByFrequency.slice(0, n).forEach((word) => {
+        delete wordCounts[word];
+    });
 }
