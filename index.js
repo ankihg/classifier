@@ -68,12 +68,7 @@ function train(documentsByClass) {
         return acc;
     }, {});
 
-    console.log(Object.keys(wordCounts).length);
     _trimMostOccurringWords(15, wordCounts)
-    console.log(Object.keys(wordCounts).length);
-
-    // let ngrams = natural.NGrams.ngrams(input, N, START, END);
-    // console.log(ngrams);
 
     const statsByClass = Object.keys(documentsByClass).reduce((acc, aClass) => {
         let numDocsOfClass = documentsByClass[aClass].length;
