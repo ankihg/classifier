@@ -4,15 +4,19 @@ const N = 1;
 const START = '<start>';
 const END = '<end>';
 
+// const documentsByClass = {
+//     A: ['plz respond. i love butterflies.', ],
+//     B: ['happy cat butt dump. help me.', ],
+// };
 const documentsByClass = {
-    A: ['plz respond. i love butterflies.', ],
-    B: ['happy cat butt dump. help me.', ],
+    djt: require('./datasets/djt'),
+    kanye: require('./datasets/kanye'),
 };
 const classes = Object.keys(documentsByClass);
 
 let statsByClass, wordCounts;
 ({statsByClass, wordCounts} = train(documentsByClass));
-classify('happy butt butterflies love', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('i am the president of the united states. I have a love for every American child who deserves a chance to have all of their dreams come true', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 // classify('plz butterflies', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 
 function classify(input, logprior, loglikelihood, classes, wordCounts) {
@@ -23,6 +27,7 @@ function classify(input, logprior, loglikelihood, classes, wordCounts) {
             if (wordCounts[inputWord])
                 acc[aClass] += loglikelihood[aClass][inputWord];
         });
+        acc[aClass] = Math.pow(Math.E, acc[aClass]);
         return acc;
     }, {});
     console.log(input);
