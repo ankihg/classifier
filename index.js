@@ -1,4 +1,5 @@
 const natural = require('natural');
+const fs = require('fs');
 
 const N = 1;
 const START = '<start>';
@@ -9,20 +10,30 @@ const END = '<end>';
 //     B: ['happy cat butt dump. help me.', ],
 // };
 const documentsByClass = {
-    djt: require('./datasets/tweets/djt'),
+    djt: require('./datasets/tweets/djt').slice(0, 50),
     kanye: require('./datasets/tweets/kanye'),
 };
 const classes = Object.keys(documentsByClass);
 
 let statsByClass, wordCounts;
-({statsByClass, wordCounts} = train(documentsByClass));
-console.log(statsByClass.logprior);
-console.log(statsByClass.loglikelihood);
-// classify('i am the president of the united states. I have a love for every American child who deserves a chance to have all of their dreams come true', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+let trainingResults = null;
+try {
+    trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
+    console.log('loaded training results from file');
+} catch(e) {
+    console.log('training ...');
+    trainingResults = train(documentsByClass);
+    fs.writeFile('./trainings/results.json', JSON.stringify(trainingResults), 'utf8', (err) => console.log(err || 'successsfully wrote training results'));
+}
+
+({statsByClass, wordCounts} = trainingResults);
+
 classify('I\'m the reason I smile everyday', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 classify('Hillary is a crook', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 classify('I love myself', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 classify('Our Military is stronger', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('Time to end the visa lottery. Congress must secure the immigration system and protect Americans.', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('As long as we open our eyes to God’s grace - and open our hearts to God’s love - then America will forever be the land of the free, the home of the brave, and a light unto all nations.', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 // classify('plz butterflies', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 
 function classify(input, logprior, loglikelihood, classes, wordCounts) {
