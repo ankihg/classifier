@@ -17,6 +17,7 @@ const classes = Object.keys(documentsByClass);
 let statsByClass, wordCounts;
 ({statsByClass, wordCounts} = train(documentsByClass));
 classify('i am the president of the united states. I have a love for every American child who deserves a chance to have all of their dreams come true', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('i am man your ass is grown. To the hustlers, killers, murderers, drug dealers even the strippers, sup', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 // classify('plz butterflies', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 
 function classify(input, logprior, loglikelihood, classes, wordCounts) {
@@ -27,7 +28,7 @@ function classify(input, logprior, loglikelihood, classes, wordCounts) {
             if (wordCounts[inputWord])
                 acc[aClass] += loglikelihood[aClass][inputWord];
         });
-        acc[aClass] = Math.pow(Math.E, acc[aClass]);
+        acc[aClass] = acc[aClass]; //Math.pow(Math.E, acc[aClass]);
         return acc;
     }, {});
     console.log(input);
