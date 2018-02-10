@@ -30,7 +30,7 @@ function classify(input, logprior, loglikelihood, classes, wordCounts) {
 }
 
 function train(documentsByClass) {
-    const numDocs = documentsByClass.A.length + documentsByClass.B.length;
+    const numDocs = Object.keys(documentsByClass).reduce((acc, aClass) => acc + documentsByClass[aClass].length, 0);
     let unitedDoc = Object.keys(documentsByClass).reduce((acc, aClass) => {
         return acc + documentsByClass[aClass].reduce((acc, doc) => acc + doc, '') + ' ';
     }, '');
