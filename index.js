@@ -1,7 +1,7 @@
 const natural = require('natural');
 const fs = require('fs');
 
-const N = 1;
+const N = 2;
 const START = '<start>';
 const END = '<end>';
 
@@ -10,14 +10,15 @@ const END = '<end>';
 //     B: ['happy cat butt dump. help me.', ],
 // };
 const documentsByClass = {
-    djt: require('./datasets/tweets/djt').slice(0, 50),
+    djt: require('./datasets/tweets/djt').slice(0, 25),
     kanye: require('./datasets/tweets/kanye'),
 };
 const classes = Object.keys(documentsByClass);
+console.log(documentsByClass.kanye.length);
 
 let trainingResults = null;
 try {
-    // trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
+    trainingResults = JSON.parse(fs.readFileSync('./trainings/results.json').toString());
     console.log('loaded training results from file');
 } catch(e) {}
 
@@ -36,6 +37,9 @@ classify('I love myself', statsByClass.logprior, statsByClass.loglikelihood, cla
 classify('Our Military is stronger', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 classify('Time to end the visa lottery. Congress must secure the immigration system and protect Americans.', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 classify('As long as we open our eyes to God’s grace - and open our hearts to God’s love - then America will forever be the land of the free, the home of the brave, and a light unto all nations.', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('lose my trust and you\'ll never get that shit again', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('Fuck fav shit Kim', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
+classify('Chill out Kim. positive vibes. trust me.', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 // classify('plz butterflies', statsByClass.logprior, statsByClass.loglikelihood, classes, wordCounts);
 
 function classify(input, logprior, loglikelihood, classes, wordCounts) {
